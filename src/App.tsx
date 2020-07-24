@@ -1,25 +1,45 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Fragment, useContext, useEffect } from "react";
+import { Store } from "./store";
 
-function App() {
+function App(): JSX.Element {
+  const { state, dispatch } = useContext(Store);
+
+  const fetchDataAction = async () => {
+    const url =
+      "https://api.tvmaze.com/singlesearch/shows?q=rick-&-morty&embed=episodes";
+
+    const data = await fetch(url);
+    const dataJSON = await data.json();
+    return dispatch({
+      type: "FETCH_DATA",
+      payload: dataJSON._embedded.episodes,
+    });
+  };
+  useEffect(() => {
+    state.episodes.length === 0 && fetchDataAction();
+  });
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Fragment>
+      <h1>Rick and Morty Episode Picker</h1>
+      <p>Pick one</p>
+
+      <section>
+        {state.episodes.map((episode: any) => {
+          return (
+            <section key={episode.id}>
+              <img
+                src={episode.image.medium}
+                alt={`Rick and mort${episode.name}`}
+              />
+              <div>{episode.name}</div>
+              <section>
+                Season:{episode.season}Number:{episode.number}
+              </section>
+            </section>
+          );
+        })}
+      </section>
+    </Fragment>
   );
 }
 
