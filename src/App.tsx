@@ -1,6 +1,6 @@
 import React, { Fragment, useContext, useEffect } from "react";
 import { Store } from "./store";
-import { IAction, IEpisode } from "./interfaces";
+import { IEpisode } from "./interfaces";
 
 function App(): JSX.Element {
   const { state, dispatch } = useContext(Store);
@@ -21,14 +21,14 @@ function App(): JSX.Element {
     state.episodes.length === 0 && fetchDataAction();
   });
 
-  const toggleFavAction = (episode: IEpisode): IAction => {
+  const toggleFavAction = (episode: IEpisode): void => {
     const episodeInFav = state.favourites.includes(episode);
     let dispatchObj = {
       type: "ADD_FAV",
       payload: episode,
     };
     if (episodeInFav) {
-      const favWithoutEpisode = state.favourite.filter(
+      const favWithoutEpisode = state.favourites.filter(
         (fav: IEpisode) => fav.id !== episode.id
       );
       dispatchObj = {
@@ -43,7 +43,7 @@ function App(): JSX.Element {
     <Fragment>
       <header className="header">
         <h1>Rick and Morty Episode Picker</h1>
-        <p>Pick one</p>
+        <p>Fav(s): {state.favourites.length}</p>
       </header>
       <section className="episode-layout">
         {state.episodes.map((episode: IEpisode) => {
@@ -60,7 +60,11 @@ function App(): JSX.Element {
                   Season:{episode.season}Number:{episode.number}
                 </div>
                 <button type="button" onClick={() => toggleFavAction(episode)}>
-                  Fav
+                  {state.favourites.find(
+                    (fav: IEpisode) => fav.id === episode.id
+                  )
+                    ? "Unfav"
+                    : "Fav"}
                 </button>
               </section>
             </section>
