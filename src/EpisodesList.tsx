@@ -12,7 +12,7 @@ export default function EpisodesList(props: any): void {
     };
     return (
       <section key={episode.id} className="episode-box">
-        <img src={episode.image.medium} alt={`Rick and mort${episode.name}`} />
+        <img src={episode.image.medium} alt={`Rick and morty${episode.name}`} />
         <div>{episode.name}</div>
         <section style={{ display: "flex", justifyContent: "spaceBetween" }}>
           <div>
